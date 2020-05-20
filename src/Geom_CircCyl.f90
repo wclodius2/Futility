@@ -799,14 +799,14 @@ ELEMENTAL FUNCTION onSurface_CircleType(circle,point) RESULT(bool)
   IF(point%dim == 2 .AND. circle%r > 0.0_SRK) THEN
     x=point%coord(1)-circle%c%coord(1)
     y=point%coord(2)-circle%c%coord(2)
-    IF((x*x+y*y) .APPROXEQA. circle%r*circle%r) THEN
+    IF(SOFTEQ((x*x+y*y),circle%r*circle%r,1.0E-12_SRK)) THEN
       theta=ATAN2PI(x,y)
       theta_shift=0.0_SRK
       IF(circle%thetastt > circle%thetastp) theta_shift=TWOPI
-      IF(y > 0.0_SRK .OR. ((y .APPROXEQA. 0.0_SRK) .AND. &
-          (x .APPROXGE. 0.0_SRK))) theta=theta+theta_shift
-      bool=(circle%thetastt .APPROXLE. theta) .AND. &
-          (theta .APPROXLE. circle%thetastp+theta_shift)
+      IF(y > 0.0_SRK .OR. ((SOFTEQ(y,0.0_SRK,1.0E-12_SRK) .AND. &
+          SOFTGE(x,0.0_SRK,1.0E-12_SRK)))) theta=theta+theta_shift
+      bool=SOFTLE(circle%thetastt,theta,1.0E-12_SRK) .AND. &
+          SOFTLE(theta,circle%thetastp+theta_shift,1.0E-12_SRK)
     ENDIF
   ENDIF
 ENDFUNCTION onSurface_CircleType
