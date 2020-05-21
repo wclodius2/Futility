@@ -600,7 +600,7 @@ PURE SUBROUTINE defineQuadEdge_graphType(thisGraph,coord1,coord2,c0,r)
     y2=coord2(2)-c0(2)
     r2=x2*x2+y2*y2
     rsq=r*r
-    IF((rsq .APPROXEQA. r1) .AND. (rsq .APPROXEQA. r2)) THEN
+    IF(SOFTEQ(rsq,r1,1.0E-13_SRK) .AND. SOFTEQ(rsq,r2,1.0E-13_SRK)) THEN
       v1=getVertIndex_graphType(thisGraph,coord1)
       v2=getVertIndex_graphType(thisGraph,coord2)
       IF(v1 > 0 .AND. v2 > 0 .AND. v1 /= v2) THEN
@@ -619,7 +619,7 @@ PURE SUBROUTINE defineQuadEdge_graphType(thisGraph,coord1,coord2,c0,r)
         r2=(y2-y1)
         r2=r2*r2
         d=SQRT(r1+r2)
-        IF(d .APPROXEQA. 2.0_SRK*ABS(r)) &
+        IF(SOFTEQ(d,2.0_SRK*ABS(r),1.0E-13_SRK)) &
             thisGraph%quadEdges(3,v1,v2)=r !sign of r indicates which half
                                            !of semi-circle, all other cases
                                            !traverse shorter arc between points

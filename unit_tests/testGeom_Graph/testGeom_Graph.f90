@@ -273,7 +273,7 @@ ENDSUBROUTINE testInsertVertex
 !
 !-------------------------------------------------------------------------------
 SUBROUTINE testGetVertIndex()
-  REAL(SRK) :: testCoord(2,7)
+  REAL(SRK) :: testCoord(2,10)
 
   testCoord(:,1)=(/1.0_SRK,2.0_SRK/)
   testCoord(:,2)=(/2.0_SRK,0.0_SRK/)
@@ -390,6 +390,7 @@ SUBROUTINE testGetVertIndex()
   ASSERT(testGraph%getVertIndex(testCoord(:,5)) ==  6,'6 (7)')
   ASSERT(testGraph%getVertIndex(testCoord(:,6)) ==  7,'7 (7)')
   CALL testGraph%clear()
+
 ENDSUBROUTINE testGetVertIndex
 !
 !-------------------------------------------------------------------------------
@@ -2094,16 +2095,16 @@ SUBROUTINE testCombine()
   CALL testGraph%combineGraph(g2)
   ASSERT_EQ(testGraph%nVert(),10,'nvert')
   ASSERT_EQ(testGraph%nEdge(),12,'nedge')
-  ASSERT(ALL(testGraph%vertices(:,1) == (/-4.08750000000000_SRK,-10.70750000000000_SRK/)),'vert 1')
-  ASSERT(ALL(testGraph%vertices(:,2) == (/-0.64750000000000_SRK,-0.64750000000000_SRK/)),'vert 2')
-  ASSERT(ALL(testGraph%vertices(:,3) == (/-0.64750000000000_SRK,0.64750000000000_SRK/)),'vert 3')
-  ASSERT(ALL(testGraph%vertices(:,4) == (/0.40992259127976_SRK,-0.64750000000000_SRK/)),'vert 4')
-  ASSERT(ALL(testGraph%vertices(:,5) == (/0.64750000000000_SRK,-0.64750000000000_SRK/)),'vert 5')
-  ASSERT(ALL(testGraph%vertices(:,6) == (/0.64750000000000_SRK,-0.43984325661400_SRK/)),'vert 6')
-  ASSERT(ALL(testGraph%vertices(:,7) == (/0.64750000000000_SRK,0.64750000000000_SRK/)),'vert 7')
-  ASSERT(ALL(testGraph%vertices(:,8) == (/9.41250000000000_SRK,-24.20750000000000_SRK/)),'vert 8')
-  ASSERT(ALL(testGraph%vertices(:,9) == (/9.41250000000000_SRK,2.79250000000000_SRK/)),'vert 9')
-  ASSERT(ALL(testGraph%vertices(:,10) == (/22.91250000000000_SRK,-10.70750000000000_SRK/)),'vert 10')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,1),(/-4.08750000000000_SRK,-10.70750000000000_SRK/),1.0E-13_SRK),'vert 1')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,2),(/-0.64750000000000_SRK,-0.64750000000000_SRK/),1.0E-13_SRK),'vert 2')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,3),(/-0.64750000000000_SRK,0.64750000000000_SRK/),1.0E-13_SRK),'vert 3')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,4),(/0.40992259127976_SRK,-0.64750000000000_SRK/),1.0E-13_SRK)),'vert 4')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,5),(/0.64750000000000_SRK,-0.64750000000000_SRK/),1.0E-13_SRK),'vert 5')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,6),(/0.64750000000000_SRK,-0.43984325661400_SRK/),1.0E-13_SRK)),'vert 6')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,7),(/0.64750000000000_SRK,0.64750000000000_SRK/),1.0E-13_SRK),'vert 7')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,8),(/9.41250000000000_SRK,-24.20750000000000_SRK/),1.0E-13_SRK),'vert 8')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,9),(/9.41250000000000_SRK,2.79250000000000_SRK/),1.0E-13_SRK),'vert 9')
+  ASSERT(ALL(SOFTEQ(testGraph%vertices(:,10),(/22.91250000000000_SRK,-10.70750000000000_SRK/),1.0E-13_SRK),'vert 10')
 
   bool=ALL(testGraph%edgeMatrix(:,1) == (/0,0,0,-1,0,0,0,-1,0,0/))
   ASSERT(bool,'edges 1')
