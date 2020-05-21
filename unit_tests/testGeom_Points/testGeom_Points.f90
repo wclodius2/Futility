@@ -371,6 +371,18 @@ SUBROUTINE TestPoints
   point2%coord(4)=0.80000000000001_SRK
   bool = .NOT.(.NOT.(point .APPROXEQA. point2) .OR. (point .APPROXEQA. point3))
   ASSERT(bool, 'PointType OPERATOR(.APPROXEQ.)')
+
+  COMPONENT_TEST('SOFTEQ')
+                  ! 123456789012345
+  point2%coord(4)=0.800000000000001_SRK
+  bool = .NOT.(.NOT.SOFTEQ(point,point2,1.0E-15_SRK) .OR. SOFTEQ(point,point3,1.0E-15_SRK))
+  ASSERT(bool, 'PointType SOFTEQ')
+  point2%coord(4)=0.800000000000010_SRK
+  ASSERT(.NOT. SOFTEQ(point,point2,1.0E-15_SRK), 'PointType SOFTEQ e-14')
+  ASSERT(SOFTEQ(point,point2,1.0E-14_SRK), 'PointType SOFTEQ e-14')
+  point2%coord(4)=0.800000000000100_SRK
+  ASSERT(.NOT. SOFTEQ(point,point2,1.0E-14_SRK), 'PointType SOFTEQ e-14')
+  ASSERT(SOFTEQ(point,point2,1.0E-13_SRK), 'PointType SOFTEQ e-13')
   CALL point2%clear()
   CALL point3%clear()
 

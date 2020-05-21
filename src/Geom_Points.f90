@@ -34,6 +34,7 @@ PUBLIC :: OPERATOR(-)
 PUBLIC :: OPERATOR(==)
 PUBLIC :: OPERATOR(/=)
 PUBLIC :: OPERATOR(.APPROXEQA.)
+PUBLIC :: SOFTEQ
 PUBLIC :: ASSIGNMENT(=)
 
 INTEGER(SIK),PARAMETER :: MAX_COORD_STR_LEN=128
@@ -159,6 +160,16 @@ INTERFACE OPERATOR(.APPROXEQA.)
   !> @copybrief GeomPoints::approxequal_PointType
   !> @copydetails GeomPoints::approxequal_PointType
   MODULE PROCEDURE approxequal_PointType
+ENDINTERFACE
+
+!> @brief Generic interface for 'is soft equal to' operator
+!> (SOFTEQ)
+!>
+!> Adds 'is soft equal to' capability for point types
+INTERFACE SOFTEQ
+  !> @copybrief GeomPoints::softeq_PointType
+  !> @copydetails GeomPoints::softeq_PointType
+  MODULE PROCEDURE softeq_PointType
 ENDINTERFACE
 
 !> @brief Generic interface for assignment operator (=)
@@ -361,6 +372,24 @@ ELEMENTAL FUNCTION approxequal_PointType(p0,p1) RESULT(bool)
   IF(p0%dim == p1%dim .AND. p0%dim > 0) &
       bool=ALL(p0%coord .APPROXEQA. p1%coord)
 ENDFUNCTION approxequal_PointType
+!
+!-------------------------------------------------------------------------------
+!> @brief Defines the 'soft equal to' operation between two points
+!> e.g. SOFTEQ(p0,p1,tol)
+!> @param p0 the first point
+!> @param p1 the second point
+!> @param tol the floating point tolerance
+!> @returns @c bool the boolean result of the operation
+!>
+!> Function is elemental so it can be used on an array of points.
+ELEMENTAL FUNCTION softeq_PointType(p0,p1,tol) RESULT(bool)
+  TYPE(PointType),INTENT(IN) :: p0,p1
+  REAL(SRK),INTENT(IN) :: tol
+  LOGICAL(SBK) :: bool
+  bool=.FALSE.
+  IF(p0%dim == p1%dim .AND. p0%dim > 0) &
+      bool=ALL(SOFTEQ(p0%coord,p1%coord,tol))
+ENDFUNCTION softeq_PointType
 !
 !-------------------------------------------------------------------------------
 !> @brief Defines the assignment operation between two points
