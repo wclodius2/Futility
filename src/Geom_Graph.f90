@@ -225,7 +225,7 @@ PURE FUNCTION getVertIndex_graphType(thisGraph,coord) RESULT(idx)
   idx=-1
   n=nVert_graphType(thisGraph)
   DO i=1,n
-    IF(coord(1) .APPROXEQA. thisGraph%vertices(1,i)) THEN
+    IF((coord(1) .APPROXEQA. thisGraph%vertices(1,i)) THEN
       IF(coord(2) .APPROXEQA. thisGraph%vertices(2,i)) THEN
         idx=i
       ELSE
@@ -1024,10 +1024,14 @@ SUBROUTINE editToVTK_graphType(thisGraph,fname,unitNo)
     ALLOCATE(vtkMesh%x(nvert))
     ALLOCATE(vtkMesh%y(nvert))
     ALLOCATE(vtkMesh%z(nvert))
+IF(fname == 'Ves_Pin_1_6_xsreg_1.vtk') WRITE(0,*) fname
+IF(fname == 'Ves_Pin_1_7_xsreg_1.vtk') WRITE(0,*) fname
     DO i=1,nvert
       vtkMesh%x(i)=thisGraph%vertices(1,i)
       vtkMesh%y(i)=thisGraph%vertices(2,i)
       vtkMesh%z(i)=0.0_SRK
+IF(fname == 'Ves_Pin_1_6_xsreg_1.vtk') WRITE(0,*) "x,y=",i,vtkMesh%x(i),vtkMesh%y(i)
+IF(fname == 'Ves_Pin_1_7_xsreg_1.vtk') WRITE(0,*) "x,y=",i,vtkMesh%x(i),vtkMesh%y(i)
     ENDDO
     nedge=nEdge_graphType(thisGraph)
     !Set up cell list (edges only isoloated verteces are ommitted)
@@ -1050,7 +1054,12 @@ SUBROUTINE editToVTK_graphType(thisGraph,fname,unitNo)
             vtkMesh%nodelist(n)=j-1
           ENDIF
         ENDDO
+
       ENDDO
+DO j=1,nvert
+IF(fname == 'Ves_Pin_1_6_xsreg_1.vtk') WRITE(0,*) "edge x,y=",j,thisGraph%edgeMatrix(:,j)
+IF(fname == 'Ves_Pin_1_7_xsreg_1.vtk') WRITE(0,*) "edge x,y=",j,thisGraph%edgeMatrix(:,j)
+ENDDO
       vtkMesh%isInit=.TRUE.
 
       !Write data to file
